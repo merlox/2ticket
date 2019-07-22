@@ -96,10 +96,12 @@ def start():
 
     repeated_integers = []
     # b. El ticket común a A, B y C con el identificador más bajo.
+    # c. El ticket común a A, B y C con el identificador más alto.
     # Para encontrar el valor más bajo, es inevitable tener que convertir cada base58 a int de nuevo
-    for item in repeated:
-        repeated_integers[i] = b58decode(item)
+    for i, item in enumerate(repeated):
+        repeated_integers.append(b58decode(item))
 
-    print("first encoded {}, first decoded {}, encoded again {}".format(repeated[0], repeated_integers[0], b58encode(str(repeated_integers[0]))))
+    print("numero comun con el identificador mas bajo: {}".format(min(repeated_integers)))
+    print("numero comun con el identificador mas alto: {}".format(max(repeated_integers)))
 
 start()
