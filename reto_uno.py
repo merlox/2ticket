@@ -64,10 +64,14 @@ class Ticket:
         self.numero_entrada = numero_entrada
         self.estado = estado
 
-# Al comenzar, crear una instancia del event manager y crear 10 eventos
+# Al comenzar, crear una instancia del event manager y crear 2 eventos y 100 tickets por separado
 def start():
     event_manager = Event_Manager()
-    for i in range(10):
+    for i in range(2):
         event_manager.create_event()
+
+    for i in range(100):
+        print('Ticket numero {}'.format(i+1))
+        event_manager.create_ticket()
 
 start()
