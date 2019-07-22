@@ -13,7 +13,7 @@
 #         b. El ticket común a A, B y C con el identificador más bajo.
 #         c. El ticket común a A, B y C con el identificador más alto.
 
-from base58 import b58encode
+from base58 import b58encode, b58decode
 from random import randint, shuffle
 from copy import deepcopy
 
@@ -94,7 +94,12 @@ def start():
     repeated = list(set(blocks[0]) & set(blocks[1]) & set(blocks[2]))
     print("Identificadores repetidos en los tres bloques {}".format(len(repeated)))
 
+    repeated_integers = []
     # b. El ticket común a A, B y C con el identificador más bajo.
     # Para encontrar el valor más bajo, es inevitable tener que convertir cada base58 a int de nuevo
+    for item in repeated:
+        repeated_integers[i] = b58decode(item)
+
+    print("first encoded {}, first decoded {}, encoded again {}".format(repeated[0], repeated_integers[0], b58encode(str(repeated_integers[0]))))
 
 start()
