@@ -80,7 +80,7 @@ def start():
         identifiers.append(event_manager.create_identifier())
     print("Hecho")
 
-    # Creamos 3 bloques con ese million de identificadores
+    # Creamos 3 bloques con ese millon de identificadores
     for i in range(3):
         identifiers_copy = deepcopy(identifiers) # Necesitamos una copia para poder alterar el order de los bloques
         block_percent = randint(5e5, 7.5e5)
@@ -88,5 +88,13 @@ def start():
         shuffle(identifiers_copy)
         # Añadimos el array con el porcentaje de elementos en el bloque
         blocks.append(identifiers_copy[:block_percent])
+
+    # Buscamos los elementos comunes en esos 3 bloques comparando los bloques
+    # a. La cantidad de tickets comunes en A, B y C.
+    repeated = list(set(blocks[0]) & set(blocks[1]) & set(blocks[2]))
+    print("Identificadores repetidos en los tres bloques {}".format(len(repeated)))
+
+    # b. El ticket común a A, B y C con el identificador más bajo.
+    # Para encontrar el valor más bajo, es inevitable tener que convertir cada base58 a int de nuevo
 
 start()
