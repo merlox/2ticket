@@ -14,7 +14,8 @@
 #         c. El ticket común a A, B y C con el identificador más alto.
 
 from base58 import b58encode
-from random import randint
+from random import randint, shuffle
+from copy import deepcopy
 
 estado = ('v', 'u')
 
@@ -72,7 +73,20 @@ class Ticket:
 def start():
     event_manager = Event_Manager()
     identifiers = []
+    blocks = []
+
+    print("Creando 1 millon de identificadores...")
     for i in range(1000000):
         identifiers.append(event_manager.create_identifier())
+    print("Hecho")
+
+    # Creamos 3 bloques con ese million de identificadores
+    for i in range(3):
+        identifiers_copy = deepcopy(identifiers) # Necesitamos una copia para poder alterar el order de los bloques
+        block_percent = randint(5e5, 7.5e5)
+        # Hacemos un shuffle para seleccionar elementos aleatorios
+        shuffle(identifiers_copy)
+        # Añadimos el array con el porcentaje de elementos en el bloque
+        blocks.append(identifiers_copy[:block_percent])
 
 start()
