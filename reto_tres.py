@@ -47,6 +47,7 @@ class Event_Manager:
 def start():
     event_manager = Event_Manager()
     aforo = 50
+    gente_dentro = []
 
     # 1. Genere 75 tickets formados por 2-tuplas <id-ticket, numeración>.
     print("Creando 75 tickets...")
@@ -59,5 +60,11 @@ def start():
     for i in range(65):
         (ticket_id, position) = event_manager.create_attendant()
         print("Ticket id {}, posicion en la cola {}".format(ticket_id, position))
+
+    # 3. Implemente un algoritmo lo más justo posible para gestionar la entrada
+    # Entrarán las personas según su posición en la cola sin importar el orden del ticket
+    for i in range(aforo):
+        for attendant in event_manager.attendants:
+            gente_dentro.append(attendant)
 
 start()
