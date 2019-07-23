@@ -22,41 +22,42 @@ estado = ('v', 'u')
 
 # Clase que se encarga de crear eventos y métodos para ambos elementos
 class Event_Manager:
-    ticket_counter = 11111 # Empieza en 11111 según los requisitos del programa
+    tickets_sold = []
+    attendants = []
+    ticket_counter = 1
     last_position = 1
 
     # Crea un identificador y lo añade a la lista de identificadores
     def create_ticket_tuple(self):
-        ticket_tuple = (b58encode(str(randint(1e9, 9999999999))), self.ticket_counter)
+        (ticket_id, ticket_counter) = (b58encode(str(randint(1e9, 9999999999))), self.ticket_counter)
+        ticket_tuple = (ticket_id, ticket_counter)
+        self.tickets_sold.append(ticket_tuple)
         self.ticket_counter += 1
         return ticket_tuple
 
     # Crea un asistente al evento y lo devuelve
     def create_attendant(self):
-        attendant_tuple = (b58encode(str(randint(1e9, 9999999999))), self.last_position)
+        (ticket_id, position) = (b58encode(str(randint(1e9, 9999999999))), self.last_position)
+        attendant_tuple = (ticket_id, position)
+        self.attendants.append(attendant_tuple)
         self.last_position += 1
         return attendant_tuple
 
 # Al comenzar, crear una instancia del event manager y crear 1 millon de identificadores
 def start():
     event_manager = Event_Manager()
-    identifiers = []
-    tickets_sold = []
-    attendants = []
     aforo = 50
 
     # 1. Genere 75 tickets formados por 2-tuplas <id-ticket, numeración>.
     print("Creando 75 tickets...")
     for i in range(75):
         (ticket_id, ticket_counter) = event_manager.create_ticket_tuple()
-        tickets_sold.append((ticket_id, ticket_counter))
         print("Ticket id {}, ticket counter {}".format(ticket_id, ticket_counter))
 
     # 2. Genere 65 asistentes caracterizados por 2-tuplas <id-ticket, posición-en-cola-de-entrada>.
     print("\nCreando 65 asistentes...")
     for i in range(65):
         (ticket_id, position) = event_manager.create_attendant()
-        attendants.append((ticket_id, position))
         print("Ticket id {}, posicion en la cola {}".format(ticket_id, position))
 
 start()
