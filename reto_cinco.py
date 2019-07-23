@@ -17,14 +17,14 @@ class Bloque:
     }
 
     def __init__(self, id, hash_anterior, tickets_json):
-        self.bloque.id = id
-        self.bloque.timestamp = time()
-        self.bloque.hash_anterior = hash_anterior
-        self.bloque.tickets_json = tickets_json
-        self.bloque.hash_actual = self.generar_hash()
+        self.bloque['id'] = id
+        self.bloque['timestamp'] = time()
+        self.bloque['hash_anterior'] = hash_anterior
+        self.bloque['tickets_json'] = tickets_json
+        self.bloque['hash_actual'] = self.generar_hash()
 
-    def generar_hash():
-        return sha256(dumps(bloque, sort_keys=True).encode('utf-8')).hexdigest()
+    def generar_hash(self):
+        return sha256(dumps(self.bloque, sort_keys=True).encode('utf-8')).hexdigest()
 
 class Tickets_Manager:
     tickets = []
@@ -58,14 +58,23 @@ class Ticket:
 
 def start():
     ticket_manager = Tickets_Manager()
-    ticket = ticket_manager.create_ticket()
+    ticket_1 = ticket_manager.create_ticket()
+    ticket_2 = ticket_manager.create_ticket()
+    tickets_json = [ticket_1, ticket_2]
 
     primer_bloque = {
         'hash_anterior': 0,
         'tickets_json': [],
     }
-
     # Hashea el primer bloque
     genesis_hashed = sha256(dumps(primer_bloque, sort_keys=True).encode('utf-8')).hexdigest()
+
+    bloque = Bloque(
+        1,
+        genesis_hashed,
+        tickets_json,
+    )
+    print(bloque)
+    # print('{} {} {} {} {}'.format(bloque.id, bloque.timestamp, bloque.hash_anterior, bloque.tickets_json, bloque.hash_actual))
 
 start()
