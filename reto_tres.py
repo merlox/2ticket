@@ -22,8 +22,8 @@ estado = ('v', 'u')
 
 # Clase que se encarga de crear eventos y métodos para ambos elementos
 class Event_Manager:
-    events = []
     ticket_counter = 11111 # Empieza en 11111 según los requisitos del programa
+    last_position = 1
 
     # Crea un identificador y lo añade a la lista de identificadores
     def create_ticket_tuple(self):
@@ -31,54 +31,17 @@ class Event_Manager:
         self.ticket_counter += 1
         return ticket_tuple
 
-    # Crea la cantidad especificada de tickets y los añade al array de tickets
-    def create_ticket(self):
-        ticket = Ticket(
-            b58encode(str(randint(1e9, 9999999999))),
-            b58encode(str(self.ticket_counter)),
-            randint(1, 1e5),
-            estado[randint(0, 1)]
-        )
-        self.ticket_counter += 1
-        print("Id ticket {}, Id evento {}, Numero {}, Estado {}".format(ticket.id_ticket, ticket.id_evento, ticket.numero_entrada, ticket.estado))
-
-    # Crea la cantidad especificada de eventos y le añade tickets para cada uno entre 2 y 10 tickets
-    def create_event(self):
-        # Primero decidimos la cantidad de tickets a crear para el evento
-        tickets_to_create = randint(2, 10)
-        print('Creating event with {} tickets'.format(tickets_to_create))
-        my_tickets = []
-        for i in range(tickets_to_create):
-            my_tickets.append(self.create_ticket())
-
-        # Despues creamos el evento y añadimos los tickets
-        self.events.append(Event(my_tickets))
-
-# Clase de eventos individuales para crear nuevos eventos conteniendo tickets
-class Event:
-    tickets = []
-
-    def __init__(self, tickets):
-        self.tickets = tickets
-
-# Clase de tickets para almacenar y crear nuevos tickets individuales
-class Ticket:
-    id_ticket = 0
-    id_evento = 0
-    numero_entrada = 0
-    estado = None
-
-    def __init__(self, id_ticket, id_evento, numero_entrada, estado):
-        self.id_ticket = id_ticket
-        self.id_evento = id_evento
-        self.numero_entrada = numero_entrada
-        self.estado = estado
+    # Crea un asistente al evento y lo devuelve
+    def create_attendant(self):
+        attendant_tuple = (b58encode(str(randint(1e9, 9999999999))), self.last_position)
+        self.last_position += 1
+        return attendant_tuple
 
 # Al comenzar, crear una instancia del event manager y crear 1 millon de identificadores
 def start():
     event_manager = Event_Manager()
     identifiers = []
-    blocks = []
+    aforo = 50
 
     # 1. Genere 75 tickets formados por 2-tuplas <id-ticket, numeración>.
     print("Creando 75 tickets...")
@@ -87,10 +50,9 @@ def start():
         print("Ticket id {}, ticket counter {}".format(ticket_id, ticket_counter))
 
     # 2. Genere 65 asistentes caracterizados por 2-tuplas <id-ticket, posición-en-cola-de-entrada>.
-    print("Creando 65 tickets...")
+    print("\nCreando 65 asistentes...")
     for i in range(65):
-        (ticket_id, ticket_counter) = event_manager.create_ticket_tuple()
-        print("Ticket id {}, ticket counter {}".format(ticket_id, ticket_counter))
-
+        (ticket_id, position) = event_manager.create_attendant()
+        print("Ticket id {}, posicion en la cola {}".format(ticket_id, position))
 
 start()
