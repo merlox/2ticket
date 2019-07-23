@@ -19,6 +19,7 @@ from copy import deepcopy
 
 estado = ('v', 'u')
 
+# Clase que se encarga de crear eventos y métodos para ambos elementos
 class Event_Manager:
     events = []
     ticket_counter = 11111 # Empieza en 11111 según los requisitos del programa
@@ -51,12 +52,14 @@ class Event_Manager:
         # Despues creamos el evento y añadimos los tickets
         self.events.append(Event(my_tickets))
 
+# Clase de eventos individuales para crear nuevos eventos conteniendo tickets
 class Event:
     tickets = []
 
     def __init__(self, tickets):
         self.tickets = tickets
 
+# Clase de tickets para almacenar y crear nuevos tickets individuales
 class Ticket:
     id_ticket = 0
     id_evento = 0
