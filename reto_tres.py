@@ -41,18 +41,22 @@ class Event_Manager:
 def start():
     event_manager = Event_Manager()
     identifiers = []
+    tickets_sold = []
+    attendants = []
     aforo = 50
 
     # 1. Genere 75 tickets formados por 2-tuplas <id-ticket, numeración>.
     print("Creando 75 tickets...")
     for i in range(75):
         (ticket_id, ticket_counter) = event_manager.create_ticket_tuple()
+        tickets_sold.append((ticket_id, ticket_counter))
         print("Ticket id {}, ticket counter {}".format(ticket_id, ticket_counter))
 
     # 2. Genere 65 asistentes caracterizados por 2-tuplas <id-ticket, posición-en-cola-de-entrada>.
     print("\nCreando 65 asistentes...")
     for i in range(65):
         (ticket_id, position) = event_manager.create_attendant()
+        attendants.append((ticket_id, position))
         print("Ticket id {}, posicion en la cola {}".format(ticket_id, position))
 
 start()
