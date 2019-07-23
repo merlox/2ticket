@@ -1,0 +1,82 @@
+// Pseudocódigo para explicar el funcionamiento del DLT para el sistema de tickets
+/*
+    Esta solución permite a los usuarios crear bloques con nuevos tickets y
+    comprobar que los bloques anteriores tienen tickets validos
+
+    Tickets es un objeto que contiene una lista de eventos y los tickets comprados
+    para cada evento
+*/
+
+class Bloque {
+    id
+    timestamp
+    hash_anterior
+    tickets_json
+    hash_actual
+
+    constructor(id, hash_anterior, tickets_json) {
+        id = id
+        timestamp = now()
+        hash_anterior = hash_anterior
+        tickets_json = tickets_json
+        hash_actual = generar_hash()
+    }
+
+    function generar_hash() {
+        return sha256(tickets_json, hash_anterior, id, timestamp)
+    }
+}
+
+class Blockchain {
+    bloques = []
+    nodo
+    last_id = 0
+    hash_mas_reciente = 0
+
+    // Los nodos son los usuarios conectados a la blockchain mediante P2P, de ellos
+    // sacamos los bloques existentes
+    constructor(nodo) {
+        bloques = recibir_bloques_nodo_conectado(nodo)
+    }
+
+    function recibir_bloques_nodo_conectado(nodo) {
+        return p2p.recibir_bloques(nodo, my_ip)
+    }
+
+    function crear_bloque(tickets_json) {
+        proof_of_work()
+        bloque = Bloque(last_id, hash_mas_reciente, tickets_json)
+        hash_mas_reciente = bloque.hash_actual
+        bloques.push(bloque)
+        p2p.enviar_bloques(my_ip, todos)
+    }
+
+    function proof_of_work() {
+        target_difficulty = 102034040
+        current_hash = 0
+        index = 0
+
+        while current_hash > target_difficulty {
+            index++
+            current_hash = sha256(current_hash, index)
+        }
+    }
+
+    function comprobar_blockchain_valida() {
+        for i in bloques.length {
+            if bloque[i].hash_actual != bloque[i].generar_hash() {
+                return false
+            }
+        }
+        return true
+    }
+
+    // Para recibir los tickets almacenados en la blockchain
+    function get_tickets() {
+        tickets = []
+        for bloque in bloques {
+            tickets += bloque.tickets
+        }
+        return tickets
+    }
+}
