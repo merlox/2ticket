@@ -119,6 +119,10 @@ def start():
             pprint(blockchain.get_tickets_from_blocks())
             print('')
         elif opcion_seleccionada == 4:
+            print('')
+            pprint(blockchain.bloques)
+            print('')
+        elif opcion_seleccionada == 5:
             exit()
         else:
             print("Error, introduce una opcion valida")
@@ -128,7 +132,8 @@ def leer_input():
     print("\t1) Crear ticket")
     print("\t2) Crear bloque con los tickets existentes")
     print("\t3) Ver tickets almacenados en la blockchain")
-    print("\t4) Salir")
+    print("\t4) Ver bloques")
+    print("\t5) Salir")
     return input()
 
 start()
