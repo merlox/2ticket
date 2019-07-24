@@ -8,6 +8,28 @@ from json import dumps
 from random import randint
 from pprint import pprint
 
+class Blockchain:
+    bloques = []
+    nodo = ''
+    hash_mas_reciente = 0
+
+    # Crea el primer bloque y lo añade al hash mas reciente
+    def __init__(self):
+        primer_bloque = self.create_block([])
+        # Hashea el primer bloque
+        bloque_hashed = sha256(dumps(primer_bloque, sort_keys=True).encode('utf-8')).hexdigest()
+        self.hash_mas_reciente = bloque_hashed
+
+    def create_block(self, tickets_json):
+        bloque = Bloque(
+            1,
+            hash_mas_reciente,
+            tickets_json,
+        )
+        self.bloques.append(bloque)
+        hash_mas_reciente = bloque.generar_hash()
+        return bloque.bloque
+
 class Bloque:
     bloque = {
         'id': 0,
@@ -59,25 +81,15 @@ class Ticket:
         self.ticket['numero_entrada'] = numero_entrada
         self.ticket['estado'] = estado
 
+
 def start():
     ticket_manager = Tickets_Manager()
+    blockchain = Blockchain()
     ticket_1 = ticket_manager.create_ticket()
     ticket_2 = ticket_manager.create_ticket()
     tickets_json = [ticket_1, ticket_2]
 
-    primer_bloque = {
-        'hash_anterior': 0,
-        'tickets_json': [],
-    }
-    # Hashea el primer bloque
-    genesis_hashed = sha256(dumps(primer_bloque, sort_keys=True).encode('utf-8')).hexdigest()
-
-    bloque = Bloque(
-        1,
-        genesis_hashed,
-        tickets_json,
-    ).bloque
-    pprint(bloque)
+    pprint(blockchain.create_block(tickets_json))
     # print('{} {} {} {} {}'.format(bloque.id, bloque.timestamp, bloque.hash_anterior, bloque.tickets_json, bloque.hash_actual))
 
 start()
