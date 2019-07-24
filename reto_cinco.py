@@ -23,7 +23,7 @@ class Blockchain:
     def create_block(self, tickets_json):
         bloque = Bloque(
             1,
-            hash_mas_reciente,
+            self.hash_mas_reciente,
             tickets_json,
         )
         self.bloques.append(bloque)
