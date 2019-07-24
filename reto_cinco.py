@@ -4,14 +4,16 @@
 from base58 import b58encode
 from hashlib import sha256
 from time import time
-from json import dumps
+from json import dumps, loads
 from random import randint
 from pprint import pprint
+from copy import deepcopy
 
 class Blockchain:
     bloques = []
     nodo = ''
     hash_mas_reciente = 0
+    last_id = 0
 
     # Crea el primer bloque y lo añade al hash mas reciente
     def __init__(self):
@@ -22,13 +24,23 @@ class Blockchain:
 
     def create_block(self, tickets_json):
         bloque = Bloque(
-            1,
+            self.last_id,
             self.hash_mas_reciente,
             tickets_json,
         )
-        self.bloques.append(bloque)
+        self.last_id += 1
+        bloque_copy = deepcopy(bloque.bloque)
+        self.bloques.append(bloque_copy)
         hash_mas_reciente = bloque.generar_hash()
-        return bloque.bloque
+        return bloque_copy
+
+    def get_tickets_from_blocks(self):
+        tickets = []
+        for bloque in self.bloques:
+            ticket_in_block = loads(bloque['tickets_json'])
+            for ticket in ticket_in_block:
+                tickets.append(ticket)
+        return tickets
 
 class Bloque:
     bloque = {
@@ -81,15 +93,42 @@ class Ticket:
         self.ticket['numero_entrada'] = numero_entrada
         self.ticket['estado'] = estado
 
-
+# La blockchain funciona creando bloques con tickets nuevos y los usuarios se
+# intercambian los tickets mediante p2p
 def start():
     ticket_manager = Tickets_Manager()
     blockchain = Blockchain()
-    ticket_1 = ticket_manager.create_ticket()
-    ticket_2 = ticket_manager.create_ticket()
-    tickets_json = [ticket_1, ticket_2]
+    tickets = []
 
-    pprint(blockchain.create_block(tickets_json))
-    # print('{} {} {} {} {}'.format(bloque.id, bloque.timestamp, bloque.hash_anterior, bloque.tickets_json, bloque.hash_actual))
+    while True:
+        opcion_seleccionada = leer_input()
+        if opcion_seleccionada == 1:
+            ticket = ticket_manager.create_ticket()
+            tickets.append(ticket)
+            print('')
+            pprint(ticket)
+            print('')
+        elif opcion_seleccionada == 2:
+            bloque = blockchain.create_block(tickets)
+            tickets = []
+            print('')
+            pprint(bloque)
+            print('')
+        elif opcion_seleccionada == 3:
+            print('')
+            pprint(blockchain.get_tickets_from_blocks())
+            print('')
+        elif opcion_seleccionada == 4:
+            exit()
+        else:
+            print("Error, introduce una opcion valida")
+
+def leer_input():
+    print("Selecciona una opcion para interactuar con la blockchain")
+    print("\t1) Crear ticket")
+    print("\t2) Crear bloque con los tickets existentes")
+    print("\t3) Ver tickets almacenados en la blockchain")
+    print("\t4) Salir")
+    return input()
 
 start()
