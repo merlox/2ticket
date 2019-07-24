@@ -6,6 +6,7 @@ from hashlib import sha256
 from time import time
 from json import dumps
 from random import randint
+from pprint import pprint
 
 class Bloque:
     bloque = {
@@ -18,9 +19,9 @@ class Bloque:
 
     def __init__(self, id, hash_anterior, tickets_json):
         self.bloque['id'] = id
-        self.bloque['timestamp'] = time()
+        self.bloque['timestamp'] = int(time())
         self.bloque['hash_anterior'] = hash_anterior
-        self.bloque['tickets_json'] = tickets_json
+        self.bloque['tickets_json'] = dumps(tickets_json, sort_keys=True).encode('utf-8')
         self.bloque['hash_actual'] = self.generar_hash()
 
     def generar_hash(self):
@@ -41,20 +42,22 @@ class Tickets_Manager:
         )
         self.tickets.append(ticket)
         self.ticket_counter += 1
-        return ticket
+        return ticket.ticket
 
 # Clase de tickets para almacenar y crear nuevos tickets individuales
 class Ticket:
-    id_ticket = 0
-    id_evento = 0
-    numero_entrada = 0
-    estado = None
+    ticket = {
+        'id_ticket': 0,
+        'id_evento': 0,
+        'numero_entrada': 0,
+        'estado': None,
+    }
 
     def __init__(self, id_ticket, id_evento, numero_entrada, estado):
-        self.id_ticket = id_ticket
-        self.id_evento = id_evento
-        self.numero_entrada = numero_entrada
-        self.estado = estado
+        self.ticket['id_ticket'] = id_ticket
+        self.ticket['id_evento'] = id_evento
+        self.ticket['numero_entrada'] = numero_entrada
+        self.ticket['estado'] = estado
 
 def start():
     ticket_manager = Tickets_Manager()
@@ -73,8 +76,8 @@ def start():
         1,
         genesis_hashed,
         tickets_json,
-    )
-    print(bloque)
+    ).bloque
+    pprint(bloque)
     # print('{} {} {} {} {}'.format(bloque.id, bloque.timestamp, bloque.hash_anterior, bloque.tickets_json, bloque.hash_actual))
 
 start()
